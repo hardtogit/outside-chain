@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <title>outside-chain</title>
+    <script type="text/javascript">
+      var htmlDc=document.getElementsByTagName('html')[0];
+          setRootSize=function () {
+              var clientWidth=document.documentElement.clientWidth||document.body.clientWidth;
+              var clientHeight=document.documentElement.clientHeight||document.body.clientHeight;
+              htmlDc.style.fontSize=clientWidth/10+'px';
+              // htmlDc.style.minHeight=clientHeight+'px';
+          };
+          setRootSize();
+          window.onresize=function () {
+              setRootSize();
+          };
+  </script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <!-- built files will be auto injected -->
+  </body>
+</html>
