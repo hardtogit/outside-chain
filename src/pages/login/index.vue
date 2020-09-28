@@ -1,71 +1,71 @@
 <template>
   <div class="login" @click="handleClick">
     <div class="title">Agent login</div>
-    <div class="dis">
-      Log in after the mobile number is bound with the APP, which is faster
-    </div>
+    <div class="dis">Log in after the mobile number is bound with the APP, which is faster</div>
     <div class="label">Phone number</div>
     <div class="input-group phone">
       <div class="left">
         <div class="prefix">+86</div>
       </div>
-      <input
-        type="number"
-        maxlength="11"
-        class="right"
-        placeholder="please enter"
-        v-model="phone"
-      />
+      <input type="number" maxlength="11" class="right" placeholder="please enter" v-model="phone" />
     </div>
     <div class="label two">Verification code</div>
     <div class="input-group code">
-      <input
-        v-model="code"
-        class="left"
-        type="number"
-        placeholder="please enter"
-      />
-      <div :class="['right',sendFlag &&'active']">Obtain</div>
+      <input v-model="code" class="left" type="number" placeholder="please enter" />
+      <div @click="sendCode" :class="['right',sendFlag &&'active']">{{sendFlag?'Obtain':`${countDown}s`}}</div>
     </div>
     <div :class="['login', submitFlag &&'active' ]">Log in</div>
   </div>
 </template>
 
 <script>
+import { Toast } from "vant";
 export default {
   name: "Login",
   data() {
     return {
       phone: 123,
       code: null,
-      countDown:60
+      countDown: 60
     };
   },
   computed: {
-    submitFlag: function () {
+    submitFlag: function() {
       return this.phone && this.code;
     },
-    sendFlag:function (){
-      return this.countDown===60
+    sendFlag: function() {
+      return this.countDown === 60;
     }
   },
   methods: {
     handleClick() {
-      console.log("s");
+      // Toast("失败文案");
     },
-    submit(){
-
+    submit() {},
+    countDownFn() {
+      if(this.countDown!==60){
+        return
+      }
+      const timer = setInterval(() => {
+        if (this.countDown !== 0) {
+          this.countDown = this.countDown - 1;
+        } else {
+          clearInterval(timer);
+          this.countDown = 60;
+        }
+      }, 1000);
     },
-    sendCode(){
-
+    sendCode() {
+      this.countDownFn()
     }
-  },
+  }
 };
 </script>
 
 <style scoped lang="less">
 .login {
   padding: 15px 20px;
+  color: #2e2a2a;
   .title {
     font-size: 24px;
     font-weight: bold;
@@ -108,6 +108,7 @@ export default {
         flex: 1;
         display: flex;
         padding-left: 10px;
+        font-size: 16px;
       }
     }
     &.code {
