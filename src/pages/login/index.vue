@@ -14,12 +14,13 @@
       <input v-model="code" class="left" type="number" placeholder="please enter" />
       <div @click="sendCode" :class="['right',sendFlag &&'active']">{{sendFlag?'Obtain':`${countDown}s`}}</div>
     </div>
-    <div :class="['login', submitFlag &&'active' ]">Log in</div>
+    <div :class="['login', submitFlag &&'active' ]" @click="submit">Log in</div>
   </div>
 </template>
 
 <script>
 import { Toast } from "vant";
+import {request} from '@/utils/request'
 export default {
   name: "Login",
   data() {
@@ -41,11 +42,16 @@ export default {
     handleClick() {
       // Toast("失败文案");
     },
-    submit() {},
+  
+    submit() {
+      const parmas={a:86-1234}
+      console.log(parmas.a)
+         request.post('/user.login.do',{data:{
+           password:"123456",username:"86-15008478053",action:"Sms",externalInfo:{"systemPlatform":"Web","deviceToken":"aaa"}
+         }})
+    },
     countDownFn() {
-      if(this.countDown!==60){
-        return
-      }
+   
       const timer = setInterval(() => {
         if (this.countDown !== 0) {
           this.countDown = this.countDown - 1;
@@ -56,7 +62,12 @@ export default {
       }, 1000);
     },
     sendCode() {
-      this.countDownFn()
+      if(this.countDown!==60){
+        return
+      }
+      request.post('/SmsTransactor.userSignupValidationCode.command',{data:{data:{mobile:'86-13612345678'}}}).then(()=>{
+        this.countDownFn()
+      })
     }
   }
 };
