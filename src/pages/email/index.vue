@@ -1,35 +1,20 @@
 <template>
   <div class="login" @click="handleClick">
-    <div class="title">Agent login</div>
+    <div class="title">Send to email</div>
     <div class="dis">
-      Log in after the mobile number is bound with the APP, which is faster
+      We will send the monthly income details to your email. Please set your designated email address.
     </div>
-    <div class="label">Phone number</div>
+    <div class="label">Email address <span>(Recommend using Gmail)</span></div>
     <div class="input-group phone">
-      <div class="left" @click="showPickerFn">
-        <div class="prefix">+{{ selectPrefix.code }}</div>
-      </div>
       <input
-        type="number"
+        type="text"
         maxlength="11"
         class="right"
         placeholder="please enter"
-        v-model="mobile"
+        v-model="email"
       />
     </div>
-    <div class="label two">Verification code</div>
-    <div class="input-group code">
-      <input
-        v-model="code"
-        class="left"
-        type="number"
-        placeholder="please enter"
-      />
-      <div @click="sendCode" :class="['right', sendFlag && 'active']">
-        {{ sendFlag ? "Obtain" : `${countDown}s` }}
-      </div>
-    </div>
-    <div :class="['login', submitFlag && 'active']" @click="submit">Log in</div>
+    <div :class="['login', submitFlag && 'active']" @click="submit">Send</div>
     <van-popup v-model="showPicker" position="bottom">
       <van-picker
         title=""
@@ -51,9 +36,8 @@ import { request } from "@/utils/request";
 export default {
   name: "Login",
   data() {
-    // 15008478053
     return {
-      mobile: '',
+      email: '',
       code: null,
       countDown: 60,
       showPicker: false,
@@ -71,7 +55,7 @@ export default {
   },
   computed: {
     submitFlag: function () {
-      return this.mobile && this.code;
+      return this.email;
     },
     sendFlag: function () {
       return this.countDown === 60;
@@ -91,20 +75,10 @@ export default {
       if (!this.submitFlag) {
         return;
       }
-      request.post("/user.login.do", {
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
+      request.post("/UserRebateTransactor.createPdfAndSendMail.command", {
         requestType:'form',
-        loading:'loading...',
-        data:{
-          password: this.code,
-          username: `${this.selectPrefix.code}-${this.mobile}`,
-          action: "Sms",
-          externalInfo: JSON.stringify({ systemPlatform: "Web", deviceToken: "aaa" }),
-        },
       }).then(()=>{
-         this.$router.push('/record')
+        Toast('Send Success')
       }).catch(()=>{
 
       });
@@ -160,6 +134,10 @@ export default {
     font-weight: 500;
     &.two {
       margin-top: 25px;
+    }
+    span{
+      font-size: 12px;
+      color: #666;
     }
   }
   .input-group {
