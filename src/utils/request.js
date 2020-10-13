@@ -3,7 +3,9 @@ import { Toast } from "vant";
 import router from '@/router'
 const prefix={
     development:'http://161.117.54.209/user',
-    production:'https://www.production.com'
+    production:'http://161.117.54.209/user',
+
+    // production:'https://www.production.com'
 }
 const SELF_ERROR_CODE=88888888;
 const errorHandler = error => {
